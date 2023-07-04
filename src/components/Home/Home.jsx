@@ -16,11 +16,11 @@ const Home = () => {
     const [filterOption , setFilterOption] = useState('all')
 
 
-    const handleChangeInput = (value) => {
-      setTodoInput(value)
+    const handleChangeInput = (e) => {
+      setTodoInput(e.target.value)
     }
 
-    const addTodoFunc = () => {
+    const addTodoFunc = (e) => {
         const newTodo = {
             id: crypto.randomUUID(),
             title: todoInput,
@@ -36,8 +36,9 @@ const Home = () => {
     }
 
     const deleteTodo = (id) => {
-        const orginalTodos = [...todosList];
+        const orginalTodos = [...sortTodo];
         const filtered = orginalTodos.filter((todo => todo.id !== id))
+        setSortTodo(filtered)
         setTodosList(filtered)
     }
 
@@ -46,30 +47,23 @@ const Home = () => {
     }
 
     const addEditedTodo = () => {
-        const orginalTodos = [...todosList];
+        const orginalTodos = [...sortTodo];
         const index = orginalTodos.findIndex(todo => todo.id === idEditedTodo)
         orginalTodos[index].title = todoInput
-        setTodosList(orginalTodos)
+        setSortTodo(orginalTodos)
         setTodoInput("")
         setIsEdit(false)
     }
 
-    const checkBtn = () => {
-        return (
-            isEdit ? <MdFileDownloadDone className="plus-icon" onClick={addEditedTodo} /> : <BsPlusCircleFill className="plus-icon"  onClick={addTodoFunc} />
-        )
-
-    }
-
     const isDoneTodo = (id) => {
-        const orginalTodos = [...todosList];
+        const orginalTodos = [...sortTodo];
         const index = orginalTodos.find((todo) => todo.id === id)
         if(index.isDone === false){
             index.isDone = true
         }else{
             index.isDone = false
         }
-        setTodosList(orginalTodos , index)
+        setSortTodo(orginalTodos , index)
     }
 
     useEffect(()=>{
@@ -103,15 +97,18 @@ const Home = () => {
         <header>
         <h1>To Do List</h1>
       </header>
-      <form action="components/Home/Home">
+      <form onSubmit={e => e.preventDefault()} >
         <input
             type="text"
             className="todo-input"
-            onChange={(e) => handleChangeInput(e.target.value)}
+            onKeyDown={e => e.keyCode === 13 && addTodoFunc()}
+            onChange={(e) => handleChangeInput(e)}
             value={todoInput}
         />
-        <div className="todo-button" type="submit">
-            {checkBtn()}
+        <div className="todo-button">
+            {
+                isEdit ? <MdFileDownloadDone className="plus-icon" onClick={addEditedTodo} /> : <BsPlusCircleFill className="plus-icon"  onClick={addTodoFunc} />
+            }
         </div>
           <SelectTodo
               setFilterOption = {setFilterOption}
