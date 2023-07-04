@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { BsPlusCircleFill } from "react-icons/bs";
 import { MdFileDownloadDone } from "react-icons/md";
 import  "./Home.css";
 import TodoList from "../TodoList/TodoList";
+import SelectTodo from "../SelectTodo/SelectTodo";
 
 
 const Home = () => {
 
-    const[todoInput , setTodoInput] = useState('')
     const[todosList , setTodosList] = useState([])
+    const[sortTodo , setSortTodo] = useState([])
+    const[todoInput , setTodoInput] = useState('')
     const [isEdit, setIsEdit] = useState(false)
     const [idEditedTodo , setIdEditedTodo] = useState(null)
+    const [filterOption , setFilterOption] = useState('all')
 
 
     const handleChangeInput = (value) => {
@@ -25,6 +28,7 @@ const Home = () => {
         }
         if(todoInput){
         setTodosList([...todosList , newTodo])
+        setSortTodo([...sortTodo , newTodo])
         setTodoInput("")
         }else{
             return false;
@@ -68,6 +72,32 @@ const Home = () => {
         setTodosList(orginalTodos , index)
     }
 
+    useEffect(()=>{
+        switch (filterOption) {
+        case('all'):{
+            const orginalTodos = [...todosList]
+            setSortTodo(orginalTodos)
+            break;
+        }case('completed'):{
+           const orginalTodos = [...todosList]
+           let completedTodos = orginalTodos.filter(todo => todo.isDone)
+           setSortTodo(completedTodos)
+           break;
+        }case("incomplete"):{
+           const orginalTodos = [...todosList]
+           let inCompletedTodos = orginalTodos.filter(todo => !todo.isDone)
+           setSortTodo(inCompletedTodos)
+           break;
+        }default:{
+           const orginalTodos = [...todosList]
+           setSortTodo(orginalTodos)
+           break;
+        }
+        }
+    },[filterOption])
+
+
+
   return (
     <div>
         <header>
@@ -83,18 +113,14 @@ const Home = () => {
         <div className="todo-button" type="submit">
             {checkBtn()}
         </div>
-        <div className="select">
-          <select name="todos" className="filter-todo">
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="incomplete">Incomplete</option>
-          </select>
-        </div>
+          <SelectTodo
+              setFilterOption = {setFilterOption}
+          />
       </form>
 
       <div className="todo-container">
         <ul className="todo-list">
-            {todosList.map(todo => (
+            {sortTodo.map(todo => (
                 <TodoList
                     key = {todo.id}
                     id = {todo.id}
