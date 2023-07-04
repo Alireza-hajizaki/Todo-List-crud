@@ -39,14 +39,12 @@ form button {
 }
 
 
-.todo-button:hover {
-    color: white;
+.todo-button:hover  {
     background: rgb(255, 200, 0);
 }
 
-.plus-icon{
+.plus-icon {
     font-size: 2rem;
-    color: rgb(255, 200, 0);;
 }
 
 .plus-icon:hover{
@@ -99,15 +97,24 @@ form button {
 .complete-btn {
     background: rgb(255, 200, 0);
 }
+.complete-btn:hover{
+    opacity: 0.6;
+}
 
 .edit-btn{
     background-color:  rgb(233, 45, 86) ;
+}
+.edit-btn:hover{
+    opacity: 0.7;
 }
 
 .trash-btn {
     border-top-right-radius: 1.75rem;
     border-bottom-right-radius: 1.75rem;
     background: rgb(171, 171, 171);
+}
+.trash-btn:hover{
+    opacity: 0.4;
 }
 
 .todo-item {
